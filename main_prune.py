@@ -80,6 +80,7 @@ def init_network(config, logger, device, imagenet=True):
     else:
         print('==> Loading checkpoint from %s.' % config.load_checkpoint)
         logger.info('==> Loading checkpoint from %s.' % config.load_checkpoint)
+        # import pdb; pdb.set_trace()
         checkpoint = torch.load(config.load_checkpoint)
         if checkpoint.get('args', None) is not None:
             args = checkpoint['args']
@@ -193,9 +194,9 @@ def main(config):
     stats = {}
     if config.data_distributed:
         torch.distributed.init_process_group(backend="nccl")
-    device = torch.device('cuda:0,1')
+    device = torch.device('cuda:0')
     criterion = torch.nn.CrossEntropyLoss()
-
+    # import pdb; pdb.set_trace()
     logger, writer = init_summary_writer(config)
     trainloader, testloader = init_dataloader(config)
 
@@ -414,7 +415,7 @@ if __name__ == '__main__':
     config.fisher_type          = args.fisher_type
     config.fix_layers           = args.fix_layers
 
-    config.load_checkpoint      = "../../HAPresults/checkpoint/pretrain/"
+    config.load_checkpoint      = "../HAPresults/checkpoint/pretrain/"
     config.load_checkpoint      += f"{args.dataset}_{args.network}{args.depth}_best.t7"
     config.checkpoint           =  f"../HAPresults/{args.dataset}_result/{args.network}{args.depth}/"
     config.checkpoint           += f"pr_{args.ratio}_nir_{args.ni_ratio}/"
